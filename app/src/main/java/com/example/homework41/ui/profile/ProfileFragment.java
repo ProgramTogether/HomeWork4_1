@@ -13,6 +13,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -43,19 +46,17 @@ public class ProfileFragment extends Fragment {
     private static final int REQUEST_CODE = 1;
     private FragmentProfileBinding binding;
     private ProfileViewModel profileViewModel;
+    private ActivityResultLauncher<String> mGetContent;
 
     public ProfileFragment() {
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         profileViewModel =
                 new ViewModelProvider(this).get(ProfileViewModel.class);
-
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         profileViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -63,25 +64,30 @@ public class ProfileFragment extends Fragment {
         });
         return root;
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initListener();
+        mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+            Toast.makeText(requireContext(), result.toString(), Toast.LENGTH_SHORT).show();
+                binding.imgPhoto.setImageURI(result);
+            }
+        });
     }
-
     public void initListener() {
         binding.imgPhoto.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, RESULT_LOAD_IMAGE);
+              /*  Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, RESULT_LOAD_IMAGE);*/
+                mGetContent.launch("image/*");
             } else {
                 ActivityCompat.requestPermissions((Activity) getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
         });
     }
-
-    @Override
+  /*  @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {
@@ -98,5 +104,5 @@ public class ProfileFragment extends Fragment {
             cursor.close();
 
         }
-    }
+    }*/
 }
