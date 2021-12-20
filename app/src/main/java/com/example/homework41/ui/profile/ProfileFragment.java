@@ -2,16 +2,12 @@ package com.example.homework41.ui.profile;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentProvider;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,22 +19,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
-import android.provider.MediaStore;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.homework41.R;
-import com.example.homework41.databinding.FragmentNotificationsBinding;
 import com.example.homework41.databinding.FragmentProfileBinding;
-import com.example.homework41.ui.notifications.NotificationsViewModel;
-
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class ProfileFragment extends Fragment {
 
@@ -71,7 +53,6 @@ public class ProfileFragment extends Fragment {
         mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
             @Override
             public void onActivityResult(Uri result) {
-            Toast.makeText(requireContext(), result.toString(), Toast.LENGTH_SHORT).show();
                 binding.imgPhoto.setImageURI(result);
             }
         });

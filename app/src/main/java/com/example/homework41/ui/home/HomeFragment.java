@@ -1,5 +1,6 @@
 package com.example.homework41.ui.home;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.homework41.R;
 import com.example.homework41.databinding.FragmentHomeBinding;
+import com.example.homework41.ui.App;
 import com.example.homework41.ui.form.FormModel;
 
-public class HomeFragment extends Fragment {
-    private HomeViewModel homeViewModel;
+public class HomeFragment extends Fragment{
     private FragmentHomeBinding binding;
     private TaskAdapter adapter;
 
@@ -27,22 +26,16 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new TaskAdapter(getContext());
+        adapter.setListener(position -> showAlert(position));
+        loadNote();
     }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-            }
-        });
-        return root;
+        return binding.getRoot();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -50,6 +43,7 @@ public class HomeFragment extends Fragment {
         intiRv();
         setFragmentListener();
     }
+
     private void setFragmentListener() {
         getParentFragmentManager().setFragmentResultListener("key", this, new FragmentResultListener() {
             @Override
@@ -59,18 +53,36 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+    private void showAlert(int position) {
+        new AlertDialog.Builder(requireActivity())
+                .setTitle("Удалить заметку?")
+                .setNegativeButton("Нет", null)
+                .setPositiveButton("да", (dialogInterface, i) -> {
+                    adapter.removeNote(position);
+                }).show();
+
+    }
+
+    private void loadNote() {
+        adapter.setList(App.db.noteDao().getAllNote());
+    }
+
     private void intiRv() {
         binding.rvTask.setAdapter(adapter);
     }
+
     private void initListeners() {
         binding.btnAction.setOnClickListener(v -> {
             openFragment();
         });
     }
+
     private void openFragment() {
         NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
         controller.navigate(R.id.formFragment);
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

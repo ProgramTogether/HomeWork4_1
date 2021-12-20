@@ -17,15 +17,29 @@ import java.util.List;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private ItemRvBinding binding;
     List<FormModel> list = new ArrayList<>();
-    LayoutInflater inflater;
+    private LayoutInflater inflater;
+    private onItemClick click;
 
     public TaskAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
     }
 
+    public void removeNote(int position) {
+        list.remove(position);
+        notifyItemRemoved(position);
+    }
+
     public void addText(FormModel text) {
         list.add(text);
         notifyDataSetChanged();
+    }
+
+    public void setList(List<FormModel> list) {
+        this.list = list;
+    }
+
+    public void setListener(onItemClick click) {
+        this.click = click;
     }
 
     public List<FormModel> getList() {
@@ -52,6 +66,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            itemView.setOnLongClickListener(v -> {
+                click.onLongClick(getAdapterPosition());
+                return true;
+            });
         }
+    }
+
+    interface onItemClick {
+        void onLongClick(int position);
     }
 }

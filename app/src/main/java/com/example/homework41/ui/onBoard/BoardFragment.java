@@ -37,21 +37,16 @@ public class BoardFragment extends Fragment {
                 requireActivity().finish();
             }
         });
-        new TabLayoutMediator(binding.tabLayout, binding.boardPager, ((tab, position) -> tab.setText(""))).attach();
+        new TabLayoutMediator(binding.tabLayout, binding.boardPager, ((tab, position) -> tab.setIcon(R.drawable.tab_selector))).attach();
     }
 
     private void initViewPager() {
         adapter = new BoardAdapter();
         binding.boardPager.setAdapter(adapter);
 
-        adapter.listener = new BoardAdapter.ClickListener() {
-            @Override
-            public void click() {
-                NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
-                controller.navigate(R.id.navigation_home);
-            }
+        adapter.listener = () -> {
+            NavController controller = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+            controller.navigateUp();
         };
     }
-
-
 }
