@@ -20,7 +20,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.homework41.databinding.FragmentProfileBinding;
+import com.example.homework41.ui.App;
 
 public class ProfileFragment extends Fragment {
 
@@ -44,6 +47,11 @@ public class ProfileFragment extends Fragment {
             public void onChanged(@Nullable String s) {
             }
         });
+        binding.imgPhoto.setImageURI(App.prefs.getSave());
+        binding.btnDelete.setOnClickListener(v -> {
+            App.prefs.delete();
+            binding.imgPhoto.setImageURI(null);
+        });
         return root;
     }
     @Override
@@ -53,12 +61,14 @@ public class ProfileFragment extends Fragment {
         mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
             @Override
             public void onActivityResult(Uri result) {
+                Glide.with(getContext()).load(result).apply(RequestOptions.circleCropTransform()).into(binding.imgPhoto);
                 binding.imgPhoto.setImageURI(result);
+                App.prefs.save(result.toString());
             }
         });
     }
     public void initListener() {
-        binding.imgPhoto.setOnClickListener(v -> {
+        binding.openImg.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
               /*  Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, RESULT_LOAD_IMAGE);*/

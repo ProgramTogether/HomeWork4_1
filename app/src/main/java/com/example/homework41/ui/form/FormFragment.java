@@ -17,6 +17,7 @@ import com.example.homework41.ui.App;
 
 public class FormFragment extends Fragment {
     private FragmentFormBinding binding;
+    private Bundle bundle = new Bundle();
 
     public FormFragment() {
     }
@@ -25,7 +26,7 @@ public class FormFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentFormBinding.inflate(inflater, container, false);
-        initListener();
+        chekIsEdit();
         return binding.getRoot();
     }
 
@@ -34,12 +35,20 @@ public class FormFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void initListener() {
-        binding.btnSave.setOnClickListener(v -> {
-                    save();
-                    close();
-                }
-        );
+    private void chekIsEdit() {
+        if (getArguments() != null) {
+            binding.etTask.setText(getArguments().getString("editText"));
+            binding.btnSave.setOnClickListener(view -> {
+                edit();
+                close();
+            });
+        } else {
+            binding.btnSave.setOnClickListener(view -> {
+                save();
+                close();
+            });
+        }
+
     }
 
     private void close() {
@@ -54,5 +63,15 @@ public class FormFragment extends Fragment {
         App.db.noteDao().insertAllNote(model);
         bundle.putString("text", text);
         getParentFragmentManager().setFragmentResult("key", bundle);
+    }
+
+    private void edit() {
+        String text = binding.etTask.getText().toString();
+        int id = getArguments().getInt("ids");
+        FormModel model = new FormModel(id, text);
+        App.db.noteDao().upDateNote(model);
+        bundle.putString("editText", text);
+        bundle.putInt("ids", id);
+        getParentFragmentManager().setFragmentResult("editNote", bundle);
     }
 }

@@ -19,9 +19,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     List<FormModel> list = new ArrayList<>();
     private LayoutInflater inflater;
     private onItemClick click;
+    private FormModel editModel;
+    private EditNoteItem editNoteItem;
 
-    public TaskAdapter(Context context) {
+    public TaskAdapter(Context context, EditNoteItem editNoteItem) {
         this.inflater = LayoutInflater.from(context);
+        this.editNoteItem = editNoteItem;
     }
 
     public void removeNote(int position) {
@@ -31,6 +34,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public void addText(FormModel text) {
         list.add(text);
+        notifyDataSetChanged();
+    }
+
+    public void editNote(FormModel model) {
+        list.set(list.indexOf(editModel), model);
         notifyDataSetChanged();
     }
 
@@ -56,6 +64,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull TaskAdapter.ViewHolder holder, int position) {
         binding.txtTitle.setText(list.get(position).getText());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editNoteItem.editClil(position);
+                editModel = list.get(holder.getBindingAdapterPosition());
+            }
+        });
     }
 
     @Override
@@ -75,5 +90,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     interface onItemClick {
         void onLongClick(int position);
+    }
+
+    interface EditNoteItem {
+        void editClil(int position);
     }
 }

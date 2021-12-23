@@ -16,16 +16,17 @@ import androidx.navigation.Navigation;
 import com.example.homework41.R;
 import com.example.homework41.databinding.FragmentHomeBinding;
 import com.example.homework41.ui.App;
+import com.example.homework41.ui.form.FormFragment;
 import com.example.homework41.ui.form.FormModel;
 
-public class HomeFragment extends Fragment{
+public class HomeFragment extends Fragment implements TaskAdapter.EditNoteItem {
     private FragmentHomeBinding binding;
     private TaskAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new TaskAdapter(getContext());
+        adapter = new TaskAdapter(getContext(), this);
         adapter.setListener(position -> showAlert(position));
         loadNote();
     }
@@ -40,8 +41,8 @@ public class HomeFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initListeners();
-        intiRv();
         setFragmentListener();
+        intiRv();
     }
 
     private void setFragmentListener() {
@@ -50,6 +51,13 @@ public class HomeFragment extends Fragment{
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 FormModel model = new FormModel(result.getString("text"));
                 adapter.addText(model);
+            }
+        });
+            getParentFragmentManager().setFragmentResultListener("editNote", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                FormModel model = new FormModel(result.getInt("ids"), result.getString("editText"));
+                adapter.editNote(model);
             }
         });
     }
@@ -87,5 +95,16 @@ public class HomeFragment extends Fragment{
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void editClil(int position) {
+        FormModel model = adapter.getList().get(position);
+        Bundle bundle = new Bundle();
+        bundle.putString("editText", model.getText());
+        bundle.putInt("ids", model.getId());
+        FormFragment formFragment = new FormFragment();
+        formFragment.setArguments(bundle);
+        openFragment();
     }
 }
