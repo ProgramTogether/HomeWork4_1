@@ -2,8 +2,10 @@ package com.example.homework41.ui.profile;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -48,12 +51,20 @@ public class ProfileFragment extends Fragment {
             }
         });
         binding.imgPhoto.setImageURI(App.prefs.getSave());
+        return root;
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onResume() {
+        super.onResume();
         binding.btnDelete.setOnClickListener(v -> {
             App.prefs.delete();
-            binding.imgPhoto.setImageURI(null);
+            binding.imgPhoto.setImageIcon(null);
         });
-        return root;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -62,13 +73,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onActivityResult(Uri result) {
                 Glide.with(getContext()).load(result).apply(RequestOptions.circleCropTransform()).into(binding.imgPhoto);
+               // Glide.with(getContext()).load(R.drawable.ic_camera).apply(RequestOptions.circleCropTransform()).into(binding.imgCamera);
                 binding.imgPhoto.setImageURI(result);
                 App.prefs.save(result.toString());
             }
         });
     }
     public void initListener() {
-        binding.openImg.setOnClickListener(v -> {
+        binding.imgPhoto.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
               /*  Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, RESULT_LOAD_IMAGE);*/
@@ -77,8 +89,24 @@ public class ProfileFragment extends Fragment {
                 ActivityCompat.requestPermissions((Activity) getContext(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
         });
+
+        binding.imgCamera.setOnClickListener(view ->  {
+            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+
+            startActivityForResult(intent, 1);
+        });
     }
-  /*  @Override
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            Uri imgUri = data.getData();
+            binding.imgPhoto.setImageURI(imgUri);
+        }
+    }
+
+    /*  @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (data != null) {

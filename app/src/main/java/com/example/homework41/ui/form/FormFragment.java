@@ -1,6 +1,7 @@
 package com.example.homework41.ui.form;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.example.homework41.ui.App;
 
 public class FormFragment extends Fragment {
     private FragmentFormBinding binding;
-    private Bundle bundle = new Bundle();
 
     public FormFragment() {
     }
@@ -26,12 +26,12 @@ public class FormFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentFormBinding.inflate(inflater, container, false);
-        chekIsEdit();
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        chekIsEdit();
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -48,7 +48,6 @@ public class FormFragment extends Fragment {
                 close();
             });
         }
-
     }
 
     private void close() {
@@ -61,17 +60,20 @@ public class FormFragment extends Fragment {
         String text = binding.etTask.getText().toString();
         FormModel model = new FormModel(text);
         App.db.noteDao().insertAllNote(model);
-        bundle.putString("text", text);
+        bundle.putSerializable("text", model);
         getParentFragmentManager().setFragmentResult("key", bundle);
+        getParentFragmentManager().popBackStack();
     }
 
     private void edit() {
+        Bundle bundle = new Bundle();
         String text = binding.etTask.getText().toString();
-        int id = getArguments().getInt("ids");
+        int id = getArguments().getInt("position");
+        Log.e("----------", id + "");
         FormModel model = new FormModel(id, text);
         App.db.noteDao().upDateNote(model);
-        bundle.putString("editText", text);
-        bundle.putInt("ids", id);
+        bundle.putSerializable("editText", model);
         getParentFragmentManager().setFragmentResult("editNote", bundle);
+        getParentFragmentManager().popBackStack();
     }
 }

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.homework41.databinding.ItemRvBinding;
+import com.example.homework41.ui.App;
 import com.example.homework41.ui.form.FormModel;
 
 import java.util.ArrayList;
@@ -28,21 +29,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public void removeNote(int position) {
-        list.remove(position);
+        App.db.noteDao().delete(list.remove(position));
         notifyItemRemoved(position);
     }
 
-    public void addText(FormModel text) {
-        list.add(text);
-        notifyDataSetChanged();
-    }
-
-    public void editNote(FormModel model) {
-        list.set(list.indexOf(editModel), model);
-        notifyDataSetChanged();
-    }
-
-    public void setList(List<FormModel> list) {
+    void setList(List<FormModel> list) {
         this.list = list;
     }
 

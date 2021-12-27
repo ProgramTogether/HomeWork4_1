@@ -5,8 +5,10 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity
-public class FormModel {
+public class FormModel implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -18,7 +20,7 @@ public class FormModel {
         this.id = id;
         this.text = text;
     }
-                  @Ignore
+              @Ignore
     public FormModel(String text) {
         this.text = text;
     }
