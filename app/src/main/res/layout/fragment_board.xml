@@ -6,19 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".ui.onBoard.BoardFragment">
 
-  <androidx.viewpager2.widget.ViewPager2
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:id="@+id/board_pager"/>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/board_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-  <com.google.android.material.tabs.TabLayout
-      android:id="@+id/tabLayout"
-      app:tabGravity="center"
-      android:layout_width="match_parent"
-      android:layout_height="25dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"/>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tabGravity="center" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

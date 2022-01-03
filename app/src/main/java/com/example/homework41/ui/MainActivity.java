@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
 
-        if (!App.prefs.isBoardShown()) {
+       /* if (!App.prefs.isBoardShown()) {
             //Открытие board fragment;
             navController.navigate(R.id.boardFragment);
-            App.prefs.saveBoardState();
-        }
+
+        }*/
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             ArrayList<Integer> list = new ArrayList<>();

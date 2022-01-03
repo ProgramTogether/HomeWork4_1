@@ -22,13 +22,12 @@
             android:layout_width="200dp"
             android:background="@drawable/ic_baseline_add_24"
             android:layout_height="200dp" />
-        <ImageView
+        <Button
             android:id="@+id/imgCamera"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignBottom="@+id/imgPhoto"
-            android:src="@drawable/ic_camera"
-            android:background="@color/white"
+            android:background="@drawable/circle_button_profile"
             android:layout_alignEnd="@+id/imgPhoto"/>
 
     </RelativeLayout>

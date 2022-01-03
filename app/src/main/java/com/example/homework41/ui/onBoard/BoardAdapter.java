@@ -10,12 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.homework41.R;
 import com.example.homework41.databinding.PageBoardBinding;
 
-import static com.example.homework41.R.drawable.btrf;
-import static com.example.homework41.R.drawable.img_d;
-
 public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> {
-    private String[] list = {"1", "2", "3", "4", "5"};
-    private int[] imgList = {R.drawable.img_a, R.drawable.img_b, btrf, R.drawable.img_c, img_d};
+    private String[] list = {"1", "2", "3", "4"};
+    private int[] imgList = {R.raw.workout_santa, R.raw.foody, R.raw.loading_circles, R.raw.perfect_loop_loading};
     private PageBoardBinding binding;
 
     protected ClickListener listener;
@@ -47,8 +44,9 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
 
         public void onBoard(int position) {
             binding.boardFirstTv.setText(list[position]);
-            binding.boardImgView.setImageResource(imgList[position]);
-            if (imgList[position] == img_d) {
+            binding.boardImgView.setAnimation(imgList[position]);
+            binding.boardImgView.playAnimation();
+            if (position == imgList.length-1) {
                 binding.btnBoard.setVisibility(View.VISIBLE);
             }
         }

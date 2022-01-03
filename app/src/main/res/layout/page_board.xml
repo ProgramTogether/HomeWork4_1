@@ -14,11 +14,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/boardImgView"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:src="@drawable/ic_launcher_background" />
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
 
     <TextView
         android:id="@+id/boardFirstTv"
@@ -42,13 +45,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="next"
+        android:textColor="@color/white"
         android:visibility="gone"
-        android:backgroundTint="@color/black"/>
+        android:background="@color/black"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         android:text="skip"
         android:backgroundTint="@color/black"/>
